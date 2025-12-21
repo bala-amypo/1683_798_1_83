@@ -17,22 +17,22 @@ public class DeliveryEvaluationController {
     }
 
     @PostMapping
-    public DeliveryEvaluation createEvaluation(@RequestBody DeliveryEvaluation evaluation) {
+    public DeliveryEvaluation create(@RequestBody DeliveryEvaluation evaluation) {
         return service.createEvaluation(evaluation);
     }
 
     @GetMapping("/{id}")
-    public DeliveryEvaluation getEvaluation(@PathVariable Long id) {
-        return service.getEvaluationByld(id);
+    public DeliveryEvaluation getById(@PathVariable Long id) {
+        return service.getEvaluationById(id);
     }
 
-    @GetMapping("/vendor/{vendorld}")
-    public List<DeliveryEvaluation> getEvaluationsForVendor(@PathVariable Long vendorld) {
-        return service.getEvaluationsForVendor(vendorld);
+    @GetMapping("/vendor/{vendorId}")
+    public List<DeliveryEvaluation> getByVendor(@PathVariable Long vendorId) {
+        return service.getEvaluationsForVendor(vendorId);
     }
 
-    @GetMapping("/requirement/{reqld}")
-    public List<DeliveryEvaluation> getEvaluationsForRequirement(@PathVariable Long reqld) {
-        return service.getEvaluationsForRequirement(reqld);
+    @GetMapping("/requirement/{reqId}")
+    public List<DeliveryEvaluation> getByRequirement(@PathVariable Long reqId) {
+        return service.getEvaluationsForRequirement(reqId);
     }
 }
