@@ -1,45 +1,57 @@
 package com.example.demo.service.impl;
 
+import org.springframework.stereotype.Service;
+import com.example.demo.service.VendorService;
 import com.example.demo.entity.Vendor;
 import com.example.demo.repository.VendorRepository;
-import com.example.demo.service.VendorService;
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
+
+@Service  // THIS MAKES IT A SPRING BEAN
 public class VendorServiceImpl implements VendorService {
 
-    private final VendorRepository vendorRepository;
+    private final VendorRepository repository;
 
-    public VendorServiceImpl(VendorRepository vendorRepository) {
-        this.vendorRepository = vendorRepository;
+    public VendorServiceImpl(VendorRepository repository) {
+        this.repository = repository;
     }
 
+    @Override
     public Vendor createVendor(Vendor vendor) {
-        if (vendorRepository.existsByName(vendor.getName())) {
-            throw new IllegalArgumentException("unique");
-        }
-        return vendorRepository.save(vendor);
+        vendor.setActive(true);
+        return repository.save(vendor);
     }
 
-    public Vendor updateVendor(Long id, Vendor vendor) {
-        Vendor existing = getVendorByld(id);
-        existing.setName(vendor.getName());
-        existing.setContactEmail(vendor.getContactEmail());
-        existing.setContactPhone(vendor.getContactPhone());
-        return vendorRepository.save(existing);
+    @Override
+    public Vendor getVendorById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
-    public Vendor getVendorByld(Long id) {
-        return vendorRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found"));
-    }
-
+    @Override
     public List<Vendor> getAllVendors() {
-        return vendorRepository.findAll();
+        return repository.findAll();
     }
 
+    @Override
+    public Vendor updateVendor(Long id, Vendor vendor) {
+        Optional<Vendor> existing = repository.findById(id);
+        if(existing.isPresent()) {
+            Vendor v = existing.get();
+            v.setName(vendor.getName());
+            v.setActive(vendor.isActive());
+            return repository.save(v);
+        }
+        return null;
+    }
+
+    @Override
     public void deactivateVendor(Long id) {
-        Vendor vendor = getVendorByld(id);
-        vendor.setActive(false);
-        vendorRepository.save(vendor);
+        Optional<Vendor> existing = repository.findById(id);
+        if(existing.isPresent()) {
+            Vendor v = existing.get();
+            v.setActive(false);
+            repository.save(v);
+        }
     }
 }
