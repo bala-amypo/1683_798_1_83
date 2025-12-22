@@ -8,8 +8,7 @@ import java.util.List;
 public interface DeliveryEvaluationRepository
         extends JpaRepository<DeliveryEvaluation, Long> {
 
-    // IMPORTANT: method names MUST match test cases
-    List<DeliveryEvaluation> findByVendorld(Long vendorld);
+    List<DeliveryEvaluation> findByVendor_Id(Long vendorId);
 
-    List<DeliveryEvaluation> findBySlaRequirementld(Long slald);
+    List<DeliveryEvaluation> findBySlaRequirement_Id(Long slaRequirementId);
 }
