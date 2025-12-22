@@ -1,45 +1,43 @@
 package com.example.demo.service.impl;
 
-import java.util.List;
-
+import com.example.demo.entity.DeliveryEvaluation;
+import com.example.demo.repository.DeliveryEvaluationRepository;
+import com.example.demo.service.DeliveryEvaluationService;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.SLARequirement;
-import com.example.demo.repository.SLARequirementRepository;
-import com.example.demo.service.SLARequirementService;
+import java.util.List;
 
-@Service   // 🔥 THIS IS THE MOST IMPORTANT LINE
-public class SLARequirementServiceImpl implements SLARequirementService {
+@Service
+public class DeliveryEvaluationServiceImpl implements DeliveryEvaluationService {
 
-    private final SLARequirementRepository repository;
+    private final DeliveryEvaluationRepository repo;
 
-    public SLARequirementServiceImpl(SLARequirementRepository repository) {
-        this.repository = repository;
+    public DeliveryEvaluationServiceImpl(DeliveryEvaluationRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public SLARequirement createSLARequirement(SLARequirement sla) {
-        return repository.save(sla);
+    public DeliveryEvaluation createEvaluation(DeliveryEvaluation evaluation) {
+        return repo.save(evaluation);
     }
 
     @Override
-    public List<SLARequirement> getAllSLARequirements() {
-        return repository.findAll();
+    public DeliveryEvaluation getEvaluationById(Long id) {
+        return repo.findById(id).orElse(null);
     }
 
     @Override
-    public SLARequirement getSLARequirementById(Long id) {
-        return repository.findById(id).orElse(null);
+    public List<DeliveryEvaluation> getAllEvaluations() {
+        return repo.findAll();
     }
 
     @Override
-    public SLARequirement updateSLARequirement(Long id, SLARequirement sla) {
-        sla.setId(id);
-        return repository.save(sla);
+    public List<DeliveryEvaluation> getEvaluationsForVendor(Long vendorId) {
+        return repo.findByVendor_Id(vendorId);
     }
 
     @Override
-    public void deleteSLARequirement(Long id) {
-        repository.deleteById(id);
+    public List<DeliveryEvaluation> getEvaluationsForRequirement(Long slaRequirementId) {
+        return repo.findBySlaRequirement_Id(slaRequirementId);
     }
 }

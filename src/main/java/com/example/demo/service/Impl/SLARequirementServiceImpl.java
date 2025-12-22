@@ -1,11 +1,14 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.example.demo.entity.SLARequirement;
 import com.example.demo.repository.SLARequirementRepository;
 import com.example.demo.service.SLARequirementService;
 
-import java.util.List;
-
+@Service   // 🔥 THIS IS THE MOST IMPORTANT LINE
 public class SLARequirementServiceImpl implements SLARequirementService {
 
     private final SLARequirementRepository repository;
@@ -14,37 +17,29 @@ public class SLARequirementServiceImpl implements SLARequirementService {
         this.repository = repository;
     }
 
-    public SLARequirement createRequirement(SLARequirement req) {
-        if (req.getMaxDeliveryDays() <= 0) {
-            throw new IllegalArgumentException("Max delivery days");
-        }
-        if (req.getMinQualityScore() < 0 || req.getMinQualityScore() > 100) {
-            throw new IllegalArgumentException("between 0 and 100");
-        }
-        return repository.save(req);
+    @Override
+    public SLARequirement createSLARequirement(SLARequirement sla) {
+        return repository.save(sla);
     }
 
-    public SLARequirement updateRequirement(Long id, SLARequirement req) {
-        SLARequirement existing = getRequirementByld(id);
-        existing.setRequirementName(req.getRequirementName());
-        existing.setDescription(req.getDescription());
-        existing.setMaxDeliveryDays(req.getMaxDeliveryDays());
-        existing.setMinQualityScore(req.getMinQualityScore());
-        return repository.save(existing);
-    }
-
-    public SLARequirement getRequirementByld(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found"));
-    }
-
-    public List<SLARequirement> getAllRequirements() {
+    @Override
+    public List<SLARequirement> getAllSLARequirements() {
         return repository.findAll();
     }
 
-    public void deactivateRequirement(Long id) {
-        SLARequirement req = getRequirementByld(id);
-        req.setActive(false);
-        repository.save(req);
+    @Override
+    public SLARequirement getSLARequirementById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public SLARequirement updateSLARequirement(Long id, SLARequirement sla) {
+        sla.setId(id);
+        return repository.save(sla);
+    }
+
+    @Override
+    public void deleteSLARequirement(Long id) {
+        repository.deleteById(id);
     }
 }

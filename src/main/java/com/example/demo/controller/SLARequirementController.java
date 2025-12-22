@@ -1,13 +1,14 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.SLARequirement;
-import com.example.demo.service.SLARequirementService;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.entity.SLARequirement;
+import com.example.demo.service.SLARequirementService;
+
 @RestController
-@RequestMapping("/api/sla-requirements")
+@RequestMapping("/sla")
 public class SLARequirementController {
 
     private final SLARequirementService service;
@@ -17,27 +18,27 @@ public class SLARequirementController {
     }
 
     @PostMapping
-    public SLARequirement createRequirement(@RequestBody SLARequirement req) {
-        return service.createRequirement(req);
-    }
-
-    @PutMapping("/{id}")
-    public SLARequirement updateRequirement(@PathVariable Long id, @RequestBody SLARequirement req) {
-        return service.updateRequirement(id, req);
-    }
-
-    @GetMapping("/{id}")
-    public SLARequirement getRequirement(@PathVariable Long id) {
-        return service.getRequirementByld(id);
+    public SLARequirement create(@RequestBody SLARequirement sla) {
+        return service.createSLARequirement(sla);
     }
 
     @GetMapping
-    public List<SLARequirement> getAllRequirements() {
-        return service.getAllRequirements();
+    public List<SLARequirement> getAll() {
+        return service.getAllSLARequirements();
     }
 
-    @PutMapping("/{id}/deactivate")
-    public void deactivateRequirement(@PathVariable Long id) {
-        service.deactivateRequirement(id);
+    @GetMapping("/{id}")
+    public SLARequirement getById(@PathVariable Long id) {
+        return service.getSLARequirementById(id);
+    }
+
+    @PutMapping("/{id}")
+    public SLARequirement update(@PathVariable Long id, @RequestBody SLARequirement sla) {
+        return service.updateSLARequirement(id, sla);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        service.deleteSLARequirement(id);
     }
 }
