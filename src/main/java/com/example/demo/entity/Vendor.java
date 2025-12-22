@@ -1,7 +1,9 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-import java.sql.Timestamp;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Vendor {
@@ -10,18 +12,17 @@ public class Vendor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String name;
 
-    private String contactEmail;
-    private String contactPhone;
-    private Boolean active = true;
+    private boolean active; // <-- make sure this exists
 
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
-
+    // Getters and Setters
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -32,27 +33,11 @@ public class Vendor {
         this.name = name;
     }
 
-    public String getContactEmail() {
-        return contactEmail;
-    }
-
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
-    }
-
-    public String getContactPhone() {
-        return contactPhone;
-    }
-
-    public void setContactPhone(String contactPhone) {
-        this.contactPhone = contactPhone;
-    }
-
-    public Boolean getActive() {
+    public boolean isActive() {  // <-- must match what Service calls
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 }
