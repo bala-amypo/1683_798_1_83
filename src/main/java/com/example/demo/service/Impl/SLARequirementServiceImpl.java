@@ -1,14 +1,14 @@
 package com.example.demo.service.impl;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
-
 import com.example.demo.entity.SLARequirement;
 import com.example.demo.repository.SLARequirementRepository;
 import com.example.demo.service.SLARequirementService;
 
-@Service   // 🔥 THIS IS THE MOST IMPORTANT LINE
+import java.util.List;
+import java.util.Optional;
+
+@Service
 public class SLARequirementServiceImpl implements SLARequirementService {
 
     private final SLARequirementRepository repository;
@@ -18,28 +18,40 @@ public class SLARequirementServiceImpl implements SLARequirementService {
     }
 
     @Override
-    public SLARequirement createSLARequirement(SLARequirement sla) {
+    public SLARequirement createRequirement(SLARequirement sla) {
+        sla.setActive(true); // default active
         return repository.save(sla);
     }
 
     @Override
-    public List<SLARequirement> getAllSLARequirements() {
-        return repository.findAll();
+    public SLARequirement updateRequirement(Long id, SLARequirement sla) {
+        Optional<SLARequirement> existing = repository.findById(id);
+        if(existing.isPresent()) {
+            SLARequirement updated = existing.get();
+            updated.setRequirementName(sla.getRequirementName());
+            updated.setActive(sla.isActive());
+            return repository.save(updated);
+        }
+        return null;
     }
 
     @Override
-    public SLARequirement getSLARequirementById(Long id) {
+    public SLARequirement getRequirementById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
     @Override
-    public SLARequirement updateSLARequirement(Long id, SLARequirement sla) {
-        sla.setId(id);
-        return repository.save(sla);
+    public List<SLARequirement> getAllRequirements() {
+        return repository.findAll();
     }
 
     @Override
-    public void deleteSLARequirement(Long id) {
-        repository.deleteById(id);
+    public void deactivateRequirement(Long id) {
+        Optional<SLARequirement> existing = repository.findById(id);
+        if(existing.isPresent()) {
+            SLARequirement sla = existing.get();
+            sla.setActive(false);
+            repository.save(sla);
+        }
     }
 }

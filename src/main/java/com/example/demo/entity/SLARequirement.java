@@ -1,9 +1,6 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class SLARequirement {
@@ -12,29 +9,28 @@ public class SLARequirement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String requirementName; // must match repository method
+
     private boolean active;
 
-    // ✅ GETTERS
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(Long id) {  // fixes setId() error
+        this.id = id;
+    }
+
+    public String getRequirementName() {
+        return requirementName;
+    }
+
+    public void setRequirementName(String requirementName) {
+        this.requirementName = requirementName;
     }
 
     public boolean isActive() {
         return active;
-    }
-
-    // ✅ SETTERS (THIS WAS MISSING)
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setActive(boolean active) {
