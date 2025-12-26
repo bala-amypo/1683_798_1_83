@@ -75,42 +75,55 @@
 //         this.meetsQualityTarget = meetsQualityTarget;
 //     }
 // }
-package com.example.demo.model;
+package com.example.demo.entity;
 
-import java.time.LocalDate;
+import jakarta.persistence.*;
 
+@Entity
 public class DeliveryEvaluation {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Vendor vendor;
-    private SLARequirement slaRequirement;
-    private Integer actualDeliveryDays;
-    private Double qualityScore;
-    private Boolean meetsDeliveryTarget;
-    private Boolean meetsQualityTarget;
-    private LocalDate evaluationDate;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    private Long vendorId;
+    private Long slaRequirementId;
+    private int rating;
+    private String comments;
 
-    public Vendor getVendor() { return vendor; }
-    public void setVendor(Vendor vendor) { this.vendor = vendor; }
+    public Long getId() {
+        return id;
+    }
 
-    public SLARequirement getSlaRequirement() { return slaRequirement; }
-    public void setSlaRequirement(SLARequirement req) { this.slaRequirement = req; }
+    public Long getVendorId() {
+        return vendorId;
+    }
 
-    public Integer getActualDeliveryDays() { return actualDeliveryDays; }
-    public void setActualDeliveryDays(Integer d) { this.actualDeliveryDays = d; }
+    public void setVendorId(Long vendorId) {
+        this.vendorId = vendorId;
+    }
 
-    public Double getQualityScore() { return qualityScore; }
-    public void setQualityScore(Double s) { this.qualityScore = s; }
+    public Long getSlaRequirementId() {
+        return slaRequirementId;
+    }
 
-    public Boolean getMeetsDeliveryTarget() { return meetsDeliveryTarget; }
-    public void setMeetsDeliveryTarget(Boolean m) { this.meetsDeliveryTarget = m; }
+    public void setSlaRequirementId(Long slaRequirementId) {
+        this.slaRequirementId = slaRequirementId;
+    }
 
-    public Boolean getMeetsQualityTarget() { return meetsQualityTarget; }
-    public void setMeetsQualityTarget(Boolean m) { this.meetsQualityTarget = m; }
+    public int getRating() {
+        return rating;
+    }
 
-    public LocalDate getEvaluationDate() { return evaluationDate; }
-    public void setEvaluationDate(LocalDate d) { this.evaluationDate = d; }
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
 }
