@@ -1,34 +1,25 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "vendor_tiers")
 public class VendorTier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long vendorId;
-    private String tierName;
+    private String name;
 
-    public Long getId() {
-        return id;
-    }
+    private String description;
 
-    public Long getVendorId() {
-        return vendorId;
-    }
-
-    public void setVendorId(Long vendorId) {
-        this.vendorId = vendorId;
-    }
-
-    public String getTierName() {
-        return tierName;
-    }
-
-    public void setTierName(String tierName) {
-        this.tierName = tierName;
-    }
+    @OneToMany(mappedBy = "tier", cascade = CascadeType.ALL)
+    private List<VendorTierLevel> levels;
 }
