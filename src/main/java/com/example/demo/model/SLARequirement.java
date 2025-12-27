@@ -1,75 +1,79 @@
-// package com.example.demo.entity;
-
-// import jakarta.persistence.*;
-
-// @Entity
-// public class SLARequirement {
-
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
-
-//     private String requirementName; // must match repository method
-
-//     private boolean active;
-
-//     public Long getId() {
-//         return id;
-//     }
-
-//     public void setId(Long id) {  // fixes setId() error
-//         this.id = id;
-//     }
-
-//     public String getRequirementName() {
-//         return requirementName;
-//     }
-
-//     public void setRequirementName(String requirementName) {
-//         this.requirementName = requirementName;
-//     }
-
-//     public boolean isActive() {
-//         return active;
-//     }
-
-//     public void setActive(boolean active) {
-//         this.active = active;
-//     }
-// }
 package com.example.demo.model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class SLARequirement {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String requirementName;
     private String description;
     private Integer maxDeliveryDays;
-    private Double qualityTarget;
+    private Double qualityThreshold;
     private Boolean active = true;
 
-    public SLARequirement() {}
-
-    public SLARequirement(String r, String d, Integer max, Double q) {
-        this.requirementName = r;
-        this.description = d;
-        this.maxDeliveryDays = max;
-        this.qualityTarget = q;
+    public SLARequirement() {
     }
 
-    public Long getId() { return id; }
-    public void setId(Long i) { this.id = i; }
+    public SLARequirement(String requirementName,
+                          String description,
+                          Integer maxDeliveryDays,
+                          Double qualityThreshold) {
+        this.requirementName = requirementName;
+        this.description = description;
+        this.maxDeliveryDays = maxDeliveryDays;
+        this.qualityThreshold = qualityThreshold;
+        this.active = true;
+    }
 
-    public String getRequirementName() { return requirementName; }
-    public void setRequirementName(String r) { this.requirementName = r; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String d) { this.description = d; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Integer getMaxDeliveryDays() { return maxDeliveryDays; }
+    public String getRequirementName() {
+        return requirementName;
+    }
 
-    public Double getQualityTarget() { return qualityTarget; }
+    public void setRequirementName(String requirementName) {
+        this.requirementName = requirementName;
+    }
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean a) { this.active = a; }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getMaxDeliveryDays() {
+        return maxDeliveryDays;
+    }
+
+    public void setMaxDeliveryDays(Integer maxDeliveryDays) {
+        this.maxDeliveryDays = maxDeliveryDays;
+    }
+
+    public Double getQualityThreshold() {
+        return qualityThreshold;
+    }
+
+    public void setQualityThreshold(Double qualityThreshold) {
+        this.qualityThreshold = qualityThreshold;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 }

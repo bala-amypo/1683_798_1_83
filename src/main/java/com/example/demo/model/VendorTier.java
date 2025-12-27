@@ -1,25 +1,86 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "vendor_tiers")
-public class VendorTier {
+public class VendorPerformanceScore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @ManyToOne
+    private Vendor vendor;
 
-    private String description;
+    private Double onTimePercentage;
+    private Double qualityCompliancePercentage;
+    private Double overallScore;
 
-    @OneToMany(mappedBy = "tier", cascade = CascadeType.ALL)
-    private List<VendorTierLevel> levels;
+    @ManyToOne
+    private VendorTier vendorTier;
+
+    private LocalDateTime calculatedAt = LocalDateTime.now();
+
+    public VendorPerformanceScore() {
+    }
+
+    public VendorPerformanceScore(Vendor vendor,
+                                  Double onTimePercentage,
+                                  Double qualityCompliancePercentage,
+                                  Double overallScore) {
+        this.vendor = vendor;
+        this.onTimePercentage = onTimePercentage;
+        this.qualityCompliancePercentage = qualityCompliancePercentage;
+        this.overallScore = overallScore;
+        this.calculatedAt = LocalDateTime.now();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Vendor getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
+    }
+
+    public Double getOnTimePercentage() {
+        return onTimePercentage;
+    }
+
+    public void setOnTimePercentage(Double onTimePercentage) {
+        this.onTimePercentage = onTimePercentage;
+    }
+
+    public Double getQualityCompliancePercentage() {
+        return qualityCompliancePercentage;
+    }
+
+    public void setQualityCompliancePercentage(Double qualityCompliancePercentage) {
+        this.qualityCompliancePercentage = qualityCompliancePercentage;
+    }
+
+    public Double getOverallScore() {
+        return overallScore;
+    }
+
+    public void setOverallScore(Double overallScore) {
+        this.overallScore = overallScore;
+    }
+
+    public VendorTier getVendorTier() {
+        return vendorTier;
+    }
+
+    public void setVendorTier(VendorTier vendorTier) {
+        this.vendorTier = vendorTier;
+    }
+
+    public LocalDateTime getCalculatedAt() {
+        return calculatedAt;
+    }
 }
