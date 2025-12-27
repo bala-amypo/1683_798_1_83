@@ -1,38 +1,46 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.VendorTier;
-import com.example.demo.service.VendorTierService;
+import com.example.demo.model.VendorPerformanceScore;
+import com.example.demo.service.VendorPerformanceScoreService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vendor-tiers")
-public class VendorTierController {
+@RequestMapping("/api/scores")
+@SecurityRequirement(name="bearerAuth")
+public class VendorPerformanceScoreController {
 
-    private final VendorTierService tierService;
+    private final VendorPerformanceScoreService scoreService;
 
-    public VendorTierController(VendorTierService tierService) {
-        this.tierService = tierService;
+    public VendorPerformanceScoreController(
+            VendorPerformanceScoreService scoreService) {
+        this.scoreService = scoreService;
     }
 
-    @PostMapping
-    public VendorTier create(@RequestBody VendorTier tier) {
-        return tierService.createTier(tier);
+    @PostMapping("/calculate/{vendorId}")
+    public ResponseEntity<VendorPerformanceScore>
+    calculate(@PathVariable Long vendorId) {
+        return ResponseEntity.ok(
+                scoreService.calculateScore(vendorId)
+        );
     }
 
-    @GetMapping("/{id}")
-    public VendorTier getById(@PathVariable Long id) {
-        return tierService.getTierById(id);
+    @GetMapping("/latest/{vendorId}")
+    public ResponseEntity<VendorPerformanceScore>
+    latest(@PathVariable Long vendorId) {
+        return ResponseEntity.ok(
+                scoreService.getLatestScore(vendorId)
+        );
     }
 
-    @GetMapping
-    public List<VendorTier> getAll() {
-        return tierService.getAllTiers();
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public void deactivate(@PathVariable Long id) {
-        tierService.deactivateTier(id);
+    @GetMapping("/vendor/{vendorId}")
+    public ResponseEntity<List<VendorPerformanceScore>>
+    history(@PathVariable Long vendorId) {
+        return ResponseEntity.ok(
+                scoreService.getScoresForVendor(vendorId)
+        );
     }
 }
