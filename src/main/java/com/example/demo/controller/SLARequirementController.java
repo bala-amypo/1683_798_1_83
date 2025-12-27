@@ -1,44 +1,38 @@
 package com.example.demo.controller;
 
-import org.springframework.web.bind.annotation.*;
+import com.example.demo.model.SLARequirement;
 import com.example.demo.service.SLARequirementService;
-import com.example.demo.entity.SLARequirement;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/sla")
+@RequestMapping("/api/sla-requirements")
 public class SLARequirementController {
 
-    private final SLARequirementService service;
+    private final SLARequirementService slaService;
 
-    public SLARequirementController(SLARequirementService service) {
-        this.service = service;
+    public SLARequirementController(SLARequirementService slaService) {
+        this.slaService = slaService;
     }
 
     @PostMapping
-    public SLARequirement create(@RequestBody SLARequirement sla) {
-        return service.createRequirement(sla);
-    }
-
-    @PutMapping("/{id}")
-    public SLARequirement update(@PathVariable Long id,
-                                 @RequestBody SLARequirement sla) {
-        return service.updateRequirement(id, sla);
+    public SLARequirement create(@RequestBody SLARequirement req) {
+        return slaService.createRequirement(req);
     }
 
     @GetMapping("/{id}")
-    public SLARequirement get(@PathVariable Long id) {
-        return service.getRequirementById(id);
+    public SLARequirement getById(@PathVariable Long id) {
+        return slaService.getRequirementById(id);
     }
 
     @GetMapping
     public List<SLARequirement> getAll() {
-        return service.getAllRequirements();
+        return slaService.getAllRequirements();
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}/deactivate")
     public void deactivate(@PathVariable Long id) {
-        service.deactivateRequirement(id);
+        slaService.deactivateRequirement(id);
     }
 }
