@@ -2,37 +2,55 @@ package com.example.demo.controller;
 
 import com.example.demo.model.SLARequirement;
 import com.example.demo.service.SLARequirementService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/sla-requirements")
+@SecurityRequirement(name="bearerAuth")
 public class SLARequirementController {
 
-    private final SLARequirementService slaService;
+    private final SLARequirementService slaRequirementService;
 
-    public SLARequirementController(SLARequirementService slaService) {
-        this.slaService = slaService;
+    public SLARequirementController(SLARequirementService slaRequirementService) {
+        this.slaRequirementService = slaRequirementService;
     }
 
     @PostMapping
-    public SLARequirement create(@RequestBody SLARequirement req) {
-        return slaService.createRequirement(req);
+    public ResponseEntity<SLARequirement> create(@RequestBody SLARequirement req) {
+        return ResponseEntity.ok(
+                slaRequirementService.createRequirement(req)
+        );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SLARequirement> update(@PathVariable Long id,
+                                                 @RequestBody SLARequirement req) {
+        return ResponseEntity.ok(
+                slaRequirementService.updateRequirement(id, req)
+        );
     }
 
     @GetMapping("/{id}")
-    public SLARequirement getById(@PathVariable Long id) {
-        return slaService.getRequirementById(id);
+    public ResponseEntity<SLARequirement> get(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                slaRequirementService.getRequirementById(id)
+        );
     }
 
     @GetMapping
-    public List<SLARequirement> getAll() {
-        return slaService.getAllRequirements();
+    public ResponseEntity<List<SLARequirement>> getAll() {
+        return ResponseEntity.ok(
+                slaRequirementService.getAllRequirements()
+        );
     }
 
     @PutMapping("/{id}/deactivate")
-    public void deactivate(@PathVariable Long id) {
-        slaService.deactivateRequirement(id);
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+        slaRequirementService.deactivateRequirement(id);
+        return ResponseEntity.ok().build();
     }
 }
