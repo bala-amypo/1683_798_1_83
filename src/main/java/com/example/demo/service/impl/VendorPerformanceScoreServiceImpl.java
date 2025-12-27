@@ -1,53 +1,76 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.demo.model.DeliveryEvaluation;
+import com.example.demo.model.Vendor;
+import com.example.demo.model.VendorPerformanceScore;
+import com.example.demo.repository.DeliveryEvaluationRepository;
+import com.example.demo.repository.VendorPerformanceScoreRepository;
+import com.example.demo.repository.VendorRepository;
+import com.example.demo.repository.VendorTierRepository;
+import com.example.demo.service.VendorPerformanceScoreService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
-public class UserServiceImpl implements UserService {
+public class VendorPerformanceScoreServiceImpl
+        implements VendorPerformanceScoreService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final VendorPerformanceScoreRepository scoreRepository;
+    private final DeliveryEvaluationRepository evaluationRepository;
+    private final VendorRepository vendorRepository;
+    private final VendorTierRepository vendorTierRepository;
 
-    public UserServiceImpl(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder
+    public VendorPerformanceScoreServiceImpl(
+            VendorPerformanceScoreRepository scoreRepository,
+            DeliveryEvaluationRepository evaluationRepository,
+            VendorRepository vendorRepository,
+            VendorTierRepository vendorTierRepository
     ) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.scoreRepository = scoreRepository;
+        this.evaluationRepository = evaluationRepository;
+        this.vendorRepository = vendorRepository;
+        this.vendorTierRepository = vendorTierRepository;
     }
 
     @Override
-    public User register(String email, String password, String role) {
-        userRepository.findByEmail(email).ifPresent(u -> {
-            throw new IllegalArgumentException("Email already exists");
-        });
+    public VendorPerformanceScore calculateScore(Long vendorId) {
 
-        User user = new User(
-                email,
-                passwordEncoder.encode(password),
-                role
-        );
-        return userRepository.save(user);
+        Vendor vendor = vendorRepository.findById(vendorId)
+                .orElseThrow(() -> new IllegalArgumentException("Vendor not found"));
+
+        List<DeliveryEvaluation> evaluations =
+                evaluationRepository.findByVendorId(vendorId);
+
+        long total = evaluations.size();
+        long onTime = evaluations.stream()
+                .filter(DeliveryEvaluation::getMeetsDeliveryTarget)
+                .count();
+        long quality = evaluations.stream()
+                .filter(DeliveryEvaluation::getMeetsQualityTarget)
+                .count();
+
+        double onTimePct = total == 0 ? 0 : (onTime * 100.0) / total;
+        double qualityPct = total == 0 ? 0 : (quality * 100.0) / total;
+        double overall = (onTimePct + qualityPct) / 2;
+
+        VendorPerformanceScore score =
+                new VendorPerformanceScore(vendor, onTimePct, qualityPct, overall);
+        score.setCalculatedAt(LocalDateTime.now());
+
+        return scoreRepository.save(score);
     }
 
     @Override
-    public User login(String email, String password) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("Invalid credentials");
-        }
-        return user;
+    public VendorPerformanceScore getLatestScore(Long vendorId) {
+        List<VendorPerformanceScore> list =
+                scoreRepository.findByVendorOrderByCalculatedAtDesc(vendorId);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
-    public User getByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public List<VendorPerformanceScore> getScoresForVendor(Long vendorId) {
+        return scoreRepository.findByVendorOrderByCalculatedAtDesc(vendorId);
     }
 }
