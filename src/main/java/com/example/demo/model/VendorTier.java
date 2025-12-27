@@ -1,86 +1,51 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
-public class VendorPerformanceScore {
+@Table(name = "vendor_tiers", uniqueConstraints = @UniqueConstraint(columnNames = "tierName"))
+public class VendorTier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Vendor vendor;
+    @Column(nullable = false)
+    private String tierName;
 
-    private Double onTimePercentage;
-    private Double qualityCompliancePercentage;
-    private Double overallScore;
+    @Column(nullable = false)
+    private Double minScoreThreshold;
 
-    @ManyToOne
-    private VendorTier vendorTier;
+    private String description;
 
-    private LocalDateTime calculatedAt = LocalDateTime.now();
+    @Column(nullable = false)
+    private Boolean active = true;
 
-    public VendorPerformanceScore() {
+    public VendorTier() {}
+
+    public VendorTier(String tierName, Double minScoreThreshold, String description) {
+        this.tierName = tierName;
+        this.minScoreThreshold = minScoreThreshold;
+        this.description = description;
+        this.active = true;
     }
 
-    public VendorPerformanceScore(Vendor vendor,
-                                  Double onTimePercentage,
-                                  Double qualityCompliancePercentage,
-                                  Double overallScore) {
-        this.vendor = vendor;
-        this.onTimePercentage = onTimePercentage;
-        this.qualityCompliancePercentage = qualityCompliancePercentage;
-        this.overallScore = overallScore;
-        this.calculatedAt = LocalDateTime.now();
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getTierName() { return tierName; }
+    public void setTierName(String tierName) { this.tierName = tierName; }
+
+    public Double getMinScoreThreshold() { return minScoreThreshold; }
+    public void setMinScoreThreshold(Double minScoreThreshold) {
+        this.minScoreThreshold = minScoreThreshold;
     }
 
-    public Long getId() {
-        return id;
+    public String getDescription() { return description; }
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Vendor getVendor() {
-        return vendor;
-    }
-
-    public void setVendor(Vendor vendor) {
-        this.vendor = vendor;
-    }
-
-    public Double getOnTimePercentage() {
-        return onTimePercentage;
-    }
-
-    public void setOnTimePercentage(Double onTimePercentage) {
-        this.onTimePercentage = onTimePercentage;
-    }
-
-    public Double getQualityCompliancePercentage() {
-        return qualityCompliancePercentage;
-    }
-
-    public void setQualityCompliancePercentage(Double qualityCompliancePercentage) {
-        this.qualityCompliancePercentage = qualityCompliancePercentage;
-    }
-
-    public Double getOverallScore() {
-        return overallScore;
-    }
-
-    public void setOverallScore(Double overallScore) {
-        this.overallScore = overallScore;
-    }
-
-    public VendorTier getVendorTier() {
-        return vendorTier;
-    }
-
-    public void setVendorTier(VendorTier vendorTier) {
-        this.vendorTier = vendorTier;
-    }
-
-    public LocalDateTime getCalculatedAt() {
-        return calculatedAt;
-    }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 }
